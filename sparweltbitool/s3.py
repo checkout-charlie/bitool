@@ -31,3 +31,34 @@ class S3Client():
             bucket = conn.get_bucket(config.get('aws', 'bucket'))
 
         return bucket.new_key(key).set_contents_from_filename(file_path_local)
+
+    def rename_files(self, prefix_old, prefix_new):
+        """ Copy all keys from prefix_old to exact keys with prefix_new. Then delete original keys."""
+        conn = self.conn
+
+        bucket = conn.get_bucket(config.get('aws', 'bucket'))
+        bucket_entries = bucket.list(prefix=prefix_old)
+
+        count = 0
+
+        for entry in bucket_entries:
+            new_key_name = entry.name.replace(prefix_old, prefix_new)
+            entry.copy(config.get('aws', 'bucket'), new_key_name)
+            entry.delete()
+            count += 1
+
+        if count > 0:
+            message = "{} files renamed from prefix: '{}' to new prefix: '{}' on s3 bucket: '{}' set on region: '{}'".format(
+                count,
+                prefix_old,
+                prefix_new,
+                config.get('aws', 'bucket'),
+                config.get('aws', 'region'))
+        else:
+            message = "Tried to rename files from prefix: '{}' to new prefix: '{}' on s3 bucket: '{}' set on region: '{}' but none found.".format(
+                prefix_old,
+                prefix_new,
+                config.get('aws', 'bucket'),
+                config.get('aws', 'region'))
+
+        Logger().debug(message)
