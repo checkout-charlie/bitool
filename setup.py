@@ -10,6 +10,7 @@ setup(
     name="sparweltbitool",
     version='0.1.2',
     long_description=readme(),
+    description='Standard modules used by Sparwelt GmbH BI Team in Web Services',
     summary="Python library with standard modules used by Sparwelt GmbH BI Team in Web Services.",
     author="Paweł Graczyk",
     author_email='abs-saas@sparwelt.de',
