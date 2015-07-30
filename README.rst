@@ -7,6 +7,19 @@ Goal and responsibility
 
 Python library with standard modules used by Sparwelt GmbH BI Team in Web Services.
 
+Modules
+=======================
+
+- client_emarsys - Connection to Emarsys WebAPI
+- client_redis - Connection to Redis
+- client_s3 - Connection to AWS s3 API
+- config - Initialization for config
+- execution_time - Calculation of Execution time
+- logger - Initialization of logger
+- redshift - Connection to Redshift
+- singleton - singleton decorator
+- validation - validators for voluptuous library
+
 Publishing in PyPI (Ubuntu 14.04)
 ===========================================
 

@@ -3,7 +3,7 @@ import boto
 from sparweltbitool.config import config
 from sparweltbitool.logger import Logger
 
-class S3Client():
+class ClientS3():
     """
     Operations with s3 bucket.
     Check documentation: http://boto.readthedocs.org/en/latest/ref/s3.html
