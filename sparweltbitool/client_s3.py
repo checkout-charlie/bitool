@@ -13,8 +13,29 @@ class ClientS3():
         self.conn = S3Connection(config.get('aws', 'access_key_id'), config.get('aws', 'secret_access_key'))
         self.logger = Logger()
 
+    def fetch_file_remote(self, key, file_path_local):
+        """ Fetch key."""
+        conn = self.conn
+
+        message = "Fetching to local file: '{}' from a key: '{}' on s3 bucket: '{}' set on region: '{}'".format(
+            file_path_local,
+            key,
+            config.get('aws', 'bucket'),
+            config.get('aws', 'region'))
+
+        Logger().info(message)
+
+        bucket = conn.get_bucket(config.get('aws', 'bucket'))
+        if not bucket.get_location():
+            conn = boto.s3.connect_to_region(config.get('aws', 'region'))
+            bucket = conn.get_bucket(config.get('aws', 'bucket'))
+
+        key_object = bucket.get_key(key)
+
+        return key_object.get_contents_to_filename(file_path_local)
+
     def send_file_local(self, key, file_path_local):
-        """ Fetch all  files for current user."""
+        """ Send key."""
         conn = self.conn
 
         message = "Sending local file: '{}' under a key: '{}' on s3 bucket: '{}' set on region: '{}'".format(
