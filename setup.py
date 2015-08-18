@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name="sparweltbitool",
-    version='0.1.5',
+    version='0.1.6',
     long_description=readme(),
     description='Standard modules used by Sparwelt GmbH BI Team in Web Services',
     summary="Python library with standard modules used by Sparwelt GmbH BI Team in Web Services.",

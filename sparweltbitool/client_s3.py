@@ -13,6 +13,24 @@ class ClientS3():
         self.conn = S3Connection(config.get('aws', 'access_key_id'), config.get('aws', 'secret_access_key'))
         self.logger = Logger()
 
+    def key_exists(self, key):
+        """ Check if key exists."""
+        conn = self.conn
+
+        message = "Checking if key: '{}' exists on s3 bucket: '{}' set on region: '{}'".format(
+            key,
+            config.get('aws', 'bucket'),
+            config.get('aws', 'region'))
+
+        Logger().info(message)
+
+        bucket = conn.get_bucket(config.get('aws', 'bucket'))
+        if not bucket.get_location():
+            conn = boto.s3.connect_to_region(config.get('aws', 'region'))
+            bucket = conn.get_bucket(config.get('aws', 'bucket'))
+
+        return bucket.get_key(key) is not None
+
     def fetch_file_remote(self, key, file_path_local):
         """ Fetch key."""
         conn = self.conn
