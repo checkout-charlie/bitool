@@ -31,8 +31,26 @@ class ClientS3():
 
         return bucket.get_key(key) is not None
 
+    def key_delete(self, key):
+        """ Check if key exists."""
+        conn = self.conn
+
+        message = "Deleting key: '{}' on s3 bucket: '{}' set on region: '{}'".format(
+            key,
+            config.get('aws', 'bucket'),
+            config.get('aws', 'region'))
+
+        Logger().info(message)
+
+        bucket = conn.get_bucket(config.get('aws', 'bucket'))
+        if not bucket.get_location():
+            conn = boto.s3.connect_to_region(config.get('aws', 'region'))
+            bucket = conn.get_bucket(config.get('aws', 'bucket'))
+
+        return bucket.delete_key(key)
+
     def fetch_file_remote(self, key, file_path_local):
-        """ Fetch key."""
+        """ Fetch key. Returns False if key not found and true if found."""
         conn = self.conn
 
         message = "Fetching to local file: '{}' from a key: '{}' on s3 bucket: '{}' set on region: '{}'".format(
@@ -50,7 +68,13 @@ class ClientS3():
 
         key_object = bucket.get_key(key)
 
-        return key_object.get_contents_to_filename(file_path_local)
+        if key_object is not None:
+            key_object.get_contents_to_filename(file_path_local)
+
+            return True
+        else:
+
+            return False
 
     def send_file_local(self, key, file_path_local):
         """ Send key."""
